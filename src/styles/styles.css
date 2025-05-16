@@ -1,0 +1,1191 @@
+/* ======================================
+ * RESET DAN STYLE DASAR
+ * ====================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+  background-color: #f4f4f4;
+}
+
+/* ======================================
+ * ACCESSIBILITY - SKIP LINK
+ * ====================================== */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  padding: 8px;
+  background-color: #bf1722;
+  color: white;
+  z-index: 2000;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ======================================
+ * HEADER DAN NAVIGASI
+ * ====================================== */
+.header {
+  background-color: #1a1a1a;
+  color: white;
+  padding: 1rem;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.header__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative; /* Tambahkan ini untuk positioning */
+}
+
+.header__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Perbaikan tampilan menu navigasi */
+.nav__list {
+  display: flex;
+  list-style: none;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+}
+
+.nav__item a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: 4px;
+}
+
+.nav__item a:hover {
+  color: #fff;
+  background-color: rgba(191, 23, 34, 0.8);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.nav__item a i {
+  font-size: 1.1rem;
+}
+
+/* Hapus efek garis bawah pada hover */
+.nav__item a::after {
+  display: none;
+}
+
+/* Styling untuk tombol navigasi */
+.nav__link#subscribe,
+.nav__link#logout,
+.nav__link.subscribed {
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.nav__link#subscribe:hover,
+.nav__link#logout:hover,
+.nav__link.subscribed:hover {
+  background-color: rgba(191, 23, 34, 0.8);
+  border-color: rgba(191, 23, 34, 0.6);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Styling khusus untuk tombol subscribe yang aktif */
+.nav__link.subscribed {
+  background-color: rgba(21, 87, 36, 0.2);
+  border-color: rgba(21, 87, 36, 0.4);
+}
+
+/* Hamburger Button */
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  position: absolute; /* Ubah menjadi absolute */
+  right: 0; /* Posisikan di kanan */
+  top: 50%; /* Posisikan di tengah vertikal */
+  transform: translateY(-50%); /* Sesuaikan posisi vertikal */
+  z-index: 1001;
+}
+
+.hamburger span {
+  display: block;
+  width: 100%;
+  height: 3px;
+  background-color: white;
+  margin: 6px 0;
+  transition: all 0.3s ease;
+  border-radius: 3px;
+}
+
+/* ======================================
+ * RESPONSIVE ADJUSTMENTS
+ * ====================================== */
+@media (max-width: 768px) {
+  .header__inner {
+    padding-right: 3rem; /* Tambahkan padding kanan untuk ruang hamburger */
+  }
+
+  .nav {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 250px;
+    height: 100vh;
+    background-color: #1a1a1a;
+    padding-top: 80px;
+    transition: right 0.3s ease;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+  }
+
+  .nav.open {
+    right: 0;
+  }
+
+  .nav__list {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .nav__item {
+    width: 100%;
+  }
+
+  .nav__item a {
+    display: block;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .nav__link#subscribe,
+  .nav__link.subscribed,
+  .nav__link#logout {
+    width: calc(100% - 2rem);
+    margin: 0.5rem 1rem;
+    justify-content: center;
+  }
+
+  .nav__item a::after {
+    display: none;
+  }
+
+  .hamburger {
+    display: block;
+  }
+
+  /* Hamburger animation */
+  .hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(7px, 7px);
+  }
+
+  .hamburger.active span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+  }
+
+  /* Overlay when menu is open */
+  .nav-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+
+  .nav-overlay.active {
+    display: block;
+  }
+}
+
+/* ======================================
+ * MAIN CONTENT CONTAINER
+ * ====================================== */
+#mainContent {
+  margin-top: 80px;
+  padding: 2rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ======================================
+ * STORY CARDS - HOME PAGE
+ * ====================================== */
+.stories {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.story-item {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.story-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+}
+
+.story-item__image {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.story-item__content {
+  padding: 1.5rem;
+}
+
+.story-item__title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #1a1a1a;
+}
+
+.story-item__description {
+  color: #4a4a4a;
+  margin-bottom: 1.25rem;
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.story-item__link {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #bf1722;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.story-item__link:hover {
+  background-color: #a01219;
+}
+
+/* ======================================
+ * LOCATION INFO & MAP - SHARED COMPONENTS
+ * ====================================== */
+.story-item__location,
+.story-detail__location {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+  width: 100%;
+}
+
+.location-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.location-info i {
+  color: #bf1722;
+  font-size: 1.1rem;
+}
+
+.location-info span {
+  color: #2d3436;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.story-item__map,
+.story-detail__map {
+  height: 200px;
+  width: 100%;
+  margin-top: 1rem;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1;
+}
+
+.story-detail__map {
+  height: 300px;
+}
+
+.coordinates {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+.coordinates p {
+  margin: 0.5rem 0;
+  font-family: monospace;
+  font-size: 1.1rem;
+}
+
+.map-container {
+  width: 100%;
+  height: 400px;
+  margin-bottom: 20px;
+}
+/* ======================================
+ * STORY DETAIL PAGE
+ * ====================================== */
+/* Update container untuk menghilangkan margin/padding yang tidak perlu */
+
+.story-detail-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/* Update story-detail untuk pemusatan sempurna */
+.story-detail {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 800px;
+  margin: 0; /* Hapus margin auto */
+  display: flex;
+  flex-direction: column;
+}
+
+.story-detail:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+}
+
+.story-detail__header {
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.story-detail__header h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 0.75rem;
+}
+
+.story-detail__meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.author-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #f4f4f4;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.story-detail__date {
+  color: #666;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.story-detail__image-container {
+  width: 100%;
+  max-height: 500px;
+  overflow: hidden;
+}
+
+.story-detail__image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.story-detail__content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.story-detail__description-container {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+.story-detail__description {
+  color: #4a4a4a;
+  line-height: 1.6;
+  font-size: 1.1rem;
+}
+
+.btn-back-home {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #bf1722;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.btn-back-home:hover {
+  background-color: #a01219;
+}
+
+/* ======================================
+ * FORMS & INPUTS
+ * ====================================== */
+.form {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form__group {
+  margin-bottom: 1rem;
+}
+
+.form__label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.form__input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: border-color 0.3s ease;
+}
+
+.form__input:focus {
+  border-color: #bf1722;
+  outline: none;
+}
+
+/* ======================================
+ * LOADING INDICATOR
+ * ====================================== */
+.loading-indicator {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.form__button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #1a1a1a;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form__button:disabled {
+  background-color: #666;
+  cursor: not-allowed;
+}
+
+/* Alert Notification */
+.alert {
+  padding: 10px 15px;
+  margin: 10px 0;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  display: none;
+}
+
+.alert-error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  display: block;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+  display: block;
+}
+
+.form__button:hover {
+  background-color: #333;
+}
+
+/* ======================================
+ * FORMS & INPUTS - AUTH
+ * ====================================== */
+.form-auth {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 2.5rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.form-auth:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+}
+
+.form__group-auth {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.form__label-auth {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  color: #333;
+  font-size: 1.05rem;
+  letter-spacing: 0.5px;
+}
+
+.form__input-auth {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  background-color: #f9f9f9;
+}
+
+.form__input-auth:focus {
+  border-color: #1a1a1a;
+  box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.1);
+  outline: none;
+  background-color: white;
+}
+
+.form__button-auth {
+  width: 100%;
+  padding: 1rem;
+  background-color: #1a1a1a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  letter-spacing: 0.5px;
+}
+
+.form__button-auth:hover {
+  background-color: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.form__button-auth:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.form__text-auth {
+  text-align: center;
+  margin-top: 1.5rem;
+  color: #666;
+  font-size: 1rem;
+}
+
+.form__text-auth a {
+  color: #1a1a1a;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+  position: relative;
+}
+
+.form__text-auth a:hover {
+  color: #555;
+}
+
+.form__text-auth a::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background-color: #1a1a1a;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.form__text-auth a:hover::after {
+  transform: scaleX(1);
+}
+
+/* ======================================
+ * FOOTER
+ * ====================================== */
+footer {
+  text-align: center;
+  padding: 2.5rem;
+  background-color: #1a1a1a;
+  color: white;
+  margin-top: 5rem;
+  position: relative;
+}
+
+footer::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #333, #666, #333);
+}
+
+footer p {
+  font-size: 1.1rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+/* Responsive adjustments for auth forms */
+@media (max-width: 768px) {
+  .form-auth {
+    padding: 2rem;
+    max-width: 90%;
+  }
+
+  .form__button-auth {
+    padding: 0.9rem;
+    font-size: 1rem;
+  }
+
+  .content h2 {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-auth {
+    padding: 1.5rem;
+  }
+
+  .form__input-auth {
+    padding: 0.8rem 0.9rem;
+  }
+
+  .alert {
+    padding: 10px 15px;
+    font-size: 0.9rem;
+  }
+
+  .content h2 {
+    font-size: 1.6rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* ======================================
+ * CAMERA & PHOTO COMPONENTS
+ * ====================================== */
+.camera-container {
+  margin-bottom: 1rem;
+}
+
+.camera {
+  width: 100%;
+  max-width: 640px;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+}
+
+.camera-controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.photo-preview {
+  margin-top: 1rem;
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  border-radius: 8px;
+}
+
+.photo-preview img {
+  border-radius: 4px;
+  width: 100%;
+}
+
+/* ======================================
+ * ERROR CONTAINER
+ * ====================================== */
+.error-container {
+  text-align: center;
+  padding: 2rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.error-container h2 {
+  color: #bf1722;
+  margin-bottom: 1rem;
+}
+
+.error-container .form__button {
+  display: inline-block;
+  width: auto;
+  margin-top: 1rem;
+  padding: 0.75rem 2rem;
+}
+
+/* ======================================
+ * FOOTER
+ * ====================================== */
+footer {
+  text-align: center;
+  padding: 2rem;
+  background-color: #1a1a1a;
+  color: white;
+  margin-top: 4rem;
+}
+
+/* ======================================
+ * UTILITY CLASSES
+ * ====================================== */
+.text-center {
+  text-align: center;
+}
+
+/* ======================================
+ * RESPONSIVE ADJUSTMENTS
+ * ====================================== */
+@media (max-width: 768px) {
+  .nav__list {
+    gap: 1rem;
+  }
+
+  #mainContent {
+    padding: 1rem;
+  }
+
+  .stories {
+    grid-template-columns: 1fr;
+  }
+
+  .story-detail__header {
+    padding: 1rem;
+  }
+
+  .story-detail__header h2 {
+    font-size: 1.5rem;
+  }
+
+  .story-detail__content {
+    padding: 1rem;
+  }
+
+  .story-detail__description {
+    font-size: 1rem;
+  }
+
+  .story-detail__map {
+    height: 250px;
+  }
+
+  .form {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header__inner {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .nav__list {
+    gap: 0.75rem;
+  }
+
+  .story-item__image {
+    height: 200px;
+  }
+
+  .story-detail__image-container {
+    max-height: 300px;
+  }
+}
+
+/* ======================================
+ * BACK TO TOP BUTTON
+ * ====================================== */
+.back-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  background-color: #bf1722;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 990;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.back-to-top:hover {
+  background-color: #a01219;
+  transform: translateY(-5px);
+}
+
+@media (max-width: 768px) {
+  .back-to-top {
+    width: 40px;
+    height: 40px;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1rem;
+  }
+}
+
+/* Styling untuk PWA shortcut buttons */
+.pwa-shortcut {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 900;
+}
+
+.pwa-shortcut__button {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #bf1722;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pwa-shortcut__button:hover {
+  transform: scale(1.1);
+  background-color: #a01219;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.pwa-shortcut__button i {
+  font-size: 1.5rem;
+}
+
+/* ======================================
+ * MAP PROVIDER BUTTONS
+ * ====================================== */
+.map-provider-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.map-provider-btn {
+  padding: 8px 15px;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  flex: 1;
+  max-width: 150px;
+  text-align: center;
+}
+
+.map-provider-btn:hover {
+  background-color: #e9e9e9;
+}
+
+.map-provider-btn.active {
+  background-color: #1a1a1a;
+  color: white;
+  border-color: #1a1a1a;
+}
+
+.map-controls {
+  margin-bottom: 15px;
+}
+
+.photo-click-provider {
+  width: 100px;
+  height: auto;
+}
+
+/* ======================================
+ * BOOKMARK STYLES
+ * ====================================== */
+.bookmark-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  margin-top: 0.5rem;
+}
+
+.bookmark-btn:hover {
+  background-color: #e9e9e9;
+}
+
+.bookmark-btn.bookmarked {
+  background-color: #1a1a1a;
+  color: white;
+  border-color: #1a1a1a;
+}
+
+.bookmark-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.remove-bookmark-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  color: #dc3545;
+}
+
+.remove-bookmark-btn:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  margin: 2rem 0;
+}
+
+.empty-state p {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  color: #6c757d;
+}
+
+.bookmarks {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.bookmark-item {
+  position: relative;
+}
+
+/* ======================================
+ * SUBSCRIBE BUTTON STYLES
+ * ====================================== */
+.nav__link#subscribe {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.nav__link#subscribe:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-2px);
+}
+
+.nav__link#subscribe i {
+  font-size: 1.1rem;
+}
+
+.nav__link.subscribed {
+  background-color: #4caf50;
+  color: white !important;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  box-shadow: 0 2px 5px rgba(76, 175, 80, 0.3);
+}
+
+.nav__link.subscribed:hover {
+  background-color: #3d8b40;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.4);
+}
+
+/* Animasi untuk icon bel */
+@keyframes bell-ring {
+  0% {
+    transform: rotate(0);
+  }
+  20% {
+    transform: rotate(15deg);
+  }
+  40% {
+    transform: rotate(-15deg);
+  }
+  60% {
+    transform: rotate(7deg);
+  }
+  80% {
+    transform: rotate(-7deg);
+  }
+  100% {
+    transform: rotate(0);
+  }
+}
+
+.nav__link#subscribe:hover i {
+  animation: bell-ring 0.8s ease;
+}
+
+/* Styling untuk dropdown menu */
+.nav__item {
+  position: relative;
+}
