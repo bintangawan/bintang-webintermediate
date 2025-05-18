@@ -83,8 +83,8 @@ const PushNotificationHelper = {
 
       console.log('Subscribed to push service:', subscription);
 
-      // Di sini Anda bisa mengirim subscription ke server
-      // await this._sendSubscriptionToServer(subscription);
+      // send notif ke server.
+      await this._sendSubscriptionToServer(subscription);
 
       return subscription;
     } catch (error) {

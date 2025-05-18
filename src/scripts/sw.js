@@ -259,3 +259,72 @@ registerRoute(
     cacheName: 'maptiler-api', 
   }), 
 );
+
+// Tambahkan event listener untuk push notification
+self.addEventListener('push', (event) => {
+  let notificationData = {
+    title: 'Notifikasi Baru',
+    options: {
+      body: 'Ini adalah notifikasi default',
+      icon: '/images/icons/icon-192x192.png',
+      badge: '/images/icons/icon-72x72.png',
+      vibrate: [100, 50, 100],
+      data: {
+        dateOfArrival: Date.now(),
+        primaryKey: 1
+      },
+      actions: [
+        {
+          action: 'explore',
+          title: 'Lihat Aplikasi',
+        },
+      ],
+    },
+  };
+
+  try {
+    if (event.data) {
+      // Coba parse sebagai JSON
+      try {
+        const dataJson = event.data.json();
+        notificationData = dataJson;
+      } catch (jsonError) {
+        // Jika bukan JSON valid, gunakan sebagai text biasa
+        const text = event.data.text();
+        notificationData.options.body = text;
+      }
+    }
+  } catch (error) {
+    console.error('Error handling push data:', error);
+  }
+
+  event.waitUntil(
+    self.registration.showNotification(
+      notificationData.title, 
+      notificationData.options
+    )
+  );
+});
+
+// Tambahkan event listener untuk notificationclick
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+
+  if (event.action === 'explore') {
+    // Buka aplikasi ke halaman home
+    event.waitUntil(
+      clients.matchAll({ type: 'window' }).then((clientList) => {
+        // Cek apakah ada window/tab yang sudah terbuka
+        for (const client of clientList) {
+          if (client.url.includes('/') && 'focus' in client) {
+            return client.focus();
+          }
+        }
+        // Jika tidak ada, buka window/tab baru
+        if (clients.openWindow) {
+          return clients.openWindow('/');
+        }
+      })
+    );
+  }
+});
