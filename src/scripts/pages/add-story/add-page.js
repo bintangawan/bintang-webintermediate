@@ -2,7 +2,7 @@ import L from 'leaflet';
 import { MAP_SERVICE_API_KEY } from '../../config';
 import StoryModel from '../../models/story-model';
 import AddStoryPresenter from './add-presenter';
-import NotificationHelper from '../../utils/notification-helper';
+import PushNotificationHelper from '../../utils/push-notification-helper';
 
 class AddStoryPage {
   constructor() {
@@ -76,9 +76,9 @@ class AddStoryView {
     }, 2000);
   }
   
-  // Tambahkan method untuk mengirim notifikasi
+  // Perbarui method untuk mengirim notifikasi
   sendNotification({ title, body }) {
-    NotificationHelper.sendNotification({
+    PushNotificationHelper.sendNotification({
       title: title,
       options: {
         body: body,
@@ -171,16 +171,17 @@ class AddStoryView {
         attributionControl: true
       });
       
-      // Pre-cache tile layer untuk offline
+      // Perbaikan untuk masalah CORS dengan menambahkan mode: 'cors' dan crossOrigin
       const tileLayerUrl = `https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=${MAP_SERVICE_API_KEY}`;
       
-      // Tambahkan opsi crossOrigin untuk membantu caching
       L.tileLayer(
         tileLayerUrl,
         {
           attribution: '© MapTiler © OpenStreetMap contributors',
           maxZoom: 18,
-          crossOrigin: 'anonymous'
+          crossOrigin: 'anonymous',
+          tileSize: 512,
+          zoomOffset: -1
         },
       ).addTo(this._map);
 

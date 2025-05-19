@@ -1,10 +1,14 @@
-const PushNotificationHelper = {
-  // Ganti dengan public key dari server Anda
-  vapidPublicKey: 'BCCs2eonMI-6H2ctvFaWg-UYdDv387Vno_bzUzALpB442r2lCnsHmtrx8biyPi_E-1fSGABK_Qs_GlvPoJJqxbk',
+import { BASE_URL, VAPID_PUBLIC_KEY } from '../config';
+import ApiService from '../data/api-service';
 
+const PushNotificationHelper = {
+  // Konfigurasi
+  vapidPublicKey: VAPID_PUBLIC_KEY || 'BCCs2eonMI-6H2ctvFaWg-UYdDv387Vno_bzUzALpB442r2lCnsHmtrx8biyPi_E-1fSGABK_Qs_GlvPoJJqxbk',
+
+  // ===== Service Worker Management =====
   async registerServiceWorker() {
     if (!('serviceWorker' in navigator)) {
-      console.log('Service Worker not supported in the browser');
+      console.log('Service Worker tidak didukung di browser ini');
       return null;
     }
 
@@ -16,45 +20,137 @@ const PushNotificationHelper = {
       for (const registration of registrations) {
         if (registration.active && registration.active.scriptURL.includes('sw.bundle.js')) {
           swRegistration = registration;
-          console.log('Service Worker already registered');
-          return swRegistration; // Return langsung jika sudah terdaftar
+          console.log('Service Worker sudah terdaftar');
+          return swRegistration;
         }
       }
       
       // Jika belum terdaftar, daftarkan service worker
       if (!swRegistration) {
         swRegistration = await navigator.serviceWorker.register('/sw.bundle.js');
-        console.log('Service worker registered: ', swRegistration);
+        console.log('Service Worker berhasil didaftarkan:', swRegistration);
       }
       
       return swRegistration;
     } catch (error) {
-      console.error('Failed to register service worker', error);
+      console.error('Gagal mendaftarkan service worker:', error);
       return null;
     }
   },
 
+  // ===== Notification Permission =====
   async requestPermission() {
-    if (!('Notification' in window)) {
-      console.log('Browser does not support notifications');
+    if (!this._checkAvailability()) {
+      console.log('Notifikasi tidak didukung di browser ini');
       return false;
     }
 
     const result = await Notification.requestPermission();
     if (result === 'denied') {
-      console.log('Notification permission denied');
+      console.log('Izin notifikasi ditolak');
       return false;
     }
 
     if (result === 'default') {
-      console.log('Notification permission canceled');
+      console.log('Permintaan izin notifikasi dibatalkan');
       return false;
     }
 
     return true;
   },
 
-  // Mengubah base64 string menjadi Uint8Array
+  _checkAvailability() {
+    return 'Notification' in window;
+  },
+
+  _checkPermission() {
+    return Notification.permission === 'granted';
+  },
+
+  // ===== Push Subscription Management =====
+  async subscribe(registration) {
+    try {
+      const subscribed = await this._isAlreadySubscribed(registration);
+      if (subscribed) {
+        console.log('Sudah berlangganan notifikasi');
+        return subscribed;
+      }
+
+      const convertedVapidKey = this.urlBase64ToUint8Array(this.vapidPublicKey);
+      const subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: convertedVapidKey,
+      });
+
+      console.log('Berhasil berlangganan push service:', subscription);
+
+      // Kirim subscription ke server
+      await this._sendSubscriptionToServer(subscription);
+
+      return subscription;
+    } catch (error) {
+      console.error('Gagal berlangganan push notification:', error);
+      throw error;
+    }
+  },
+
+  async unsubscribe(registration) {
+    try {
+      const subscription = await this._getSubscription(registration);
+      if (!subscription) {
+        console.log('Tidak ada langganan yang ditemukan');
+        return { error: false, message: 'Tidak ada langganan yang ditemukan' };
+      }
+
+      // Hapus subscription dari server
+      await ApiService.unsubscribeNotification(subscription.endpoint);
+      
+      // Hapus subscription dari browser
+      await subscription.unsubscribe();
+      console.log('Berhasil berhenti berlangganan push notification');
+      
+      return { error: false, message: 'Berhasil berhenti berlangganan' };
+    } catch (error) {
+      console.error('Gagal berhenti berlangganan push notification:', error);
+      throw error;
+    }
+  },
+
+  async _getSubscription(registration) {
+    return await registration.pushManager.getSubscription();
+  },
+
+  async _isAlreadySubscribed(registration) {
+    const subscription = await this._getSubscription(registration);
+    return subscription;
+  },
+
+  // ===== Notification Display =====
+  async sendNotification({ title, options }) {
+    if (!this._checkAvailability()) {
+      console.log('Notifikasi tidak didukung di browser ini');
+      return;
+    }
+
+    if (!this._checkPermission()) {
+      console.log('Pengguna belum memberikan izin notifikasi');
+      await this.requestPermission();
+      return;
+    }
+
+    await this._showNotification({ title, options });
+  },
+
+  async _showNotification({ title, options }) {
+    try {
+      const serviceWorkerRegistration = await navigator.serviceWorker.ready;
+      await serviceWorkerRegistration.showNotification(title, options);
+    } catch (error) {
+      console.error('Gagal menampilkan notifikasi:', error);
+    }
+  },
+
+  // ===== Utility Functions =====
   urlBase64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
     const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
@@ -67,56 +163,26 @@ const PushNotificationHelper = {
     return outputArray;
   },
 
-  async subscribe(registration) {
-    try {
-      const subscribed = await this._isAlreadySubscribed(registration);
-      if (subscribed) {
-        console.log('Already subscribed');
-        return;
-      }
-
-      const convertedVapidKey = this.urlBase64ToUint8Array(this.vapidPublicKey);
-      const subscription = await registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: convertedVapidKey,
-      });
-
-      console.log('Subscribed to push service:', subscription);
-
-      // send notif ke server.
-      await this._sendSubscriptionToServer(subscription);
-
-      return subscription;
-    } catch (error) {
-      console.error('Failed to subscribe push notification', error);
-    }
-  },
-
-  async unsubscribe(registration) {
-    const subscription = await this._getSubscription(registration);
-    if (!subscription) return;
-
-    try {
-      await subscription.unsubscribe();
-      console.log('Unsubscribed from push notification');
-    } catch (error) {
-      console.error('Failed to unsubscribe push notification', error);
-    }
-  },
-
-  async _getSubscription(registration) {
-    return await registration.pushManager.getSubscription();
-  },
-
-  async _isAlreadySubscribed(registration) {
-    const subscription = await this._getSubscription(registration);
-    return !!subscription;
-  },
-
-  // Metode untuk mengirim subscription ke server
+  // ===== Server Communication =====
   async _sendSubscriptionToServer(subscription) {
-    // Implementasi pengiriman subscription ke server
-    console.log('Sending subscription to server:', subscription);
+    try {
+      const response = await ApiService.subscribeNotification({
+        endpoint: subscription.endpoint,
+        keys: {
+          p256dh: btoa(String.fromCharCode.apply(
+            null, new Uint8Array(subscription.getKey('p256dh'))
+          )),
+          auth: btoa(String.fromCharCode.apply(
+            null, new Uint8Array(subscription.getKey('auth'))
+          )),
+        },
+      });
+      console.log('Subscription berhasil dikirim ke server:', response);
+      return response;
+    } catch (error) {
+      console.error('Gagal mengirim subscription ke server:', error);
+      throw error;
+    }
   },
 };
 

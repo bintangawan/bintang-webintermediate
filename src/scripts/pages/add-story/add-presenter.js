@@ -1,5 +1,3 @@
-import NotificationHelper from '../../utils/notification-helper';
-
 class AddStoryPresenter {
   constructor({ view, model }) {
     this._view = view;
